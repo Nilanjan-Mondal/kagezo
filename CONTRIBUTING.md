@@ -60,10 +60,11 @@ git push origin feature-branch
 > - [BUILD]: changes affect the build system
 > - [REFACTOR]: code changes that don't bring new features or fixes
 
-- *Example commit message
+- *Example commit message*
 	- [FEAT]: add hash-based duplication
 	- [CHORE]: clean up unused imports
-
+- Follow the <a href = "https://github.com/mintRaven-05/kagezo/blob/main/CODE-OF-CONDUCT.md">Code of Conduct</a>.
+- Ensure your changes do not break existing functionality.
 ## Need Help?
 
 If you have any questions, feel free to **open an issue** or start a discussion.  
