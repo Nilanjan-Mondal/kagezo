@@ -1,5 +1,7 @@
 const { uploadToCloudinary } = require("../services/file.service");
 const { findUser } = require("../repositories/user.repository");
+const { get } = require("mongoose");
+const { findFilesByUser } = require("../repositories/file.repository");
 
 
 const uploadFile = async (req, res) => {
@@ -39,4 +41,34 @@ const uploadFile = async (req, res) => {
     }
 };
 
-module.exports = {uploadFile};
+
+const getUserFiles = async (req, res) => {
+    try {
+        const { userName } = req.body;
+        if (!userName) {
+            return res.status(400).json({ error: "Username is required" });
+        }
+
+        const user = await findUser(userName);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        const userFiles = await findFilesByUser(user._id);
+
+        return res.status(200).json({
+            message: "User files retrieved successfully",
+            success: true,
+            data: userFiles
+        });
+    } catch (error) {
+        console.error("Error in getUserFiles:", error);
+        return res.status(500).json({
+            message: "Failed to retrieve user files",
+            success: false,
+            error
+        });
+    }
+};
+
+module.exports = { uploadFile, getUserFiles };
