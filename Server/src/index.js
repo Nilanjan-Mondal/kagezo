@@ -2,6 +2,7 @@ const express = require('express');
 const ServerConfig = require('./configs/server.config');
 const connectDB = require('./configs/db.config');
 const userRoutes = require('./routes/user.routes');
+const fileRoutes = require('./routes/file.routes');
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.post('/ping', (req, res) => {
 })
 
 app.use('/api/user/', userRoutes);
+app.use('/api/file/', fileRoutes);
 
 app.listen(ServerConfig.PORT, async () => {
     await connectDB();
