@@ -14,8 +14,6 @@ void signalHandler([[maybe_unused]] int signum) {
 }
 
 void Shell::showPrompt() {
-  char hostname[128];
-  gethostname(hostname, sizeof(hostname));
   std::cout << BOLD BLUE "[" << getTimestamp() << "] " << BOLD GREEN "$ " RESET;
 }
 
