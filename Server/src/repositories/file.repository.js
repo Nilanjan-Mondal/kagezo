@@ -9,4 +9,14 @@ const saveFile = async (fileDetails) => {
     }
 };
 
-module.exports = { saveFile };
+// Find files uploaded by a specific user
+const findFilesByUser = async (userId) => {
+    try {
+        return await File.find({ userId: userId });
+    } catch (error) {
+        console.error("Database Error:", error);
+        throw new Error("Database operation failed");
+    }
+};
+
+module.exports = { saveFile, findFilesByUser };
