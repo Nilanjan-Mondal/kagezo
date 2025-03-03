@@ -1,6 +1,7 @@
 const express = require('express');
 const ServerConfig = require('./configs/server.config');
 const connectDB = require('./configs/db.config');
+const userRoutes = require('./routes/user.routes');
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.post('/ping', (req, res) => {
     return res.json({message: "pong"});
 })
 
+app.use('/api/user/', userRoutes);
 
 app.listen(ServerConfig.PORT, async () => {
     await connectDB();
