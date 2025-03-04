@@ -39,14 +39,17 @@ func detectChanges(newState map[string]FileInfo) {
 		oldInfo, exists := dirState[path]
 		if !exists {
 			logChange("<CREATE> " + path)
+			logWorker("CREATE - " + path)
 		} else if oldInfo.ModTime != info.ModTime && oldInfo.Size != info.Size {
 			logChange("<MODIFY> " + path)
+			logWorker("MODIFY - " + path)
 		}
 	}
 
 	for path := range dirState {
 		if _, exists := newState[path]; !exists {
 			logChange("<PURGE> " + path)
+			logWorker("PURGE - " + path)
 		}
 	}
 
