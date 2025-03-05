@@ -1,6 +1,7 @@
 package worker
 
 import (
+	"archive/zip"
 	"bufio"
 	"fmt"
 	"os"
@@ -58,4 +59,34 @@ func removeProcessedLog(logFile string) {
 	if err != nil {
 		fmt.Println("Error updating log file:", err)
 	}
+}
+
+func zipFile(sourceFile, zipFileName string) error {
+	// Create the ZIP file
+	zipFile, err := os.Create(zipFileName)
+	if err != nil {
+		return err
+	}
+	defer zipFile.Close()
+
+	// Create a ZIP writer
+	zipWriter := zip.NewWriter(zipFile)
+	defer zipWriter.Close()
+
+	// Open the source file
+	source, err := os.Open(sourceFile)
+	if err != nil {
+		return err
+	}
+	defer source.Close()
+
+	// Create a writer inside the ZIP archive
+	writer, err := zipWriter.Create(sourceFile)
+	if err != nil {
+		return err
+	}
+
+	// Copy the file contents into the ZIP archive
+	_, err = io.Copy(writer, source)
+	return err
 }
