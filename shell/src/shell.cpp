@@ -32,7 +32,11 @@ void Shell::handleCommand(const std::string &input) {
   std::string command = tokens[0];
   tokens.erase(tokens.begin());
 
-  static std::map<std::string, std::string> commands = {{"help", "help"}};
+  static std::map<std::string, std::string> commands = {{"help", "help"},
+                                                        {"list", "list"},
+                                                        {"start", "start"},
+                                                        {"stop", "stop"},
+                                                        {"update", "update"}};
 
   if (command == "exit") {
     std::cout << BOLD GREEN "Exiting shell..." RESET << std::endl;
