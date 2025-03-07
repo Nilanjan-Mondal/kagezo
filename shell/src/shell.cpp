@@ -31,7 +31,7 @@ void Shell::setRawMode(bool enable) {
 }
 
 void clearLine() {
-  std::cout << "\33[2K\r" << BOLD BLUE "[" << getTimestamp() << "] "
+  std::cout << "\33[2K\r" << BOLD BLUE "[" << "kagezoShell" << "] "
             << BOLD GREEN "$ " RESET << std::flush;
 }
 
@@ -39,7 +39,7 @@ std::string Shell::readInput() {
   std::string input;
   char c;
   setRawMode(true);
-  int tempIndex = history.size();
+  size_t tempIndex = history.size();
 
   while (true) {
     c = getchar();
@@ -86,7 +86,7 @@ std::string Shell::readInput() {
 }
 
 void Shell::showPrompt() {
-  std::cout << BOLD BLUE "[" << getTimestamp() << "] " << BOLD GREEN "$ " RESET;
+  std::cout << BOLD BLUE "[" << "kagezoShell" << "] " << BOLD GREEN "$ " RESET;
 }
 
 void Shell::handleCommand(const std::string &input) {
