@@ -9,6 +9,8 @@ public:
 
 private:
   void showPrompt();
+  void setRawMode(bool enable);
+  std::string readInput();
   void handleCommand(const std::string &input);
 };
 
