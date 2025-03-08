@@ -19,17 +19,18 @@ printc "$CYAN" "╠════════════════════�
 printc "$CYAN" "║                                                 ║ "
 
 printc "$GREEN" "  ◉  Start Daemons                               "
-printc "$YELLOW" "     ├─○ start [tracker|worker|server|all]  "
-printc "$YELLOW" "     └─○ Start specific/all daemons              "
+printc "$YELLOW" "     └─○ start [tracker|worker|server|all]  "
+
+printc "$YELLOW" "         → Start specific/all daemons              "
 printc "$CYAN" "                                                   "
 printc "$GREEN" "  ◉  Stop Daemons                                "
-printc "$YELLOW" "     ├─○ stop [tracker|worker|server|all]   "
-printc "$YELLOW" "     └─○ Stop specific/all daemons               "
+printc "$YELLOW" "     └─○ stop [tracker|worker|server|all]   "
+printc "$YELLOW" "         → Stop specific/all daemons               "
 
 printc "$CYAN" "                                                   "
 printc "$GREEN" "  ◉  Check Daemon Status                         "
-printc "$YELLOW" "     ├─○ list daemon                            "
-printc "$YELLOW" "     └─○ Show status of all daemons              "
+printc "$YELLOW" "     └─○ list daemon                            "
+printc "$YELLOW" "         → Show status of all daemons              "
 
 printc "$CYAN" "                                                   "
 printc "$GREEN" "  ◉  Update Tracklist & Ignorelist               "
@@ -53,7 +54,7 @@ printc "$YELLOW" "     └─○ Manage Cloudinary credentials           "
 
 printc "$CYAN" "║                                                 ║"
 printc "$CYAN" "╠═════════════════════════════════════════════════╣"
-printc "$CYAN" "║                                                 ║"
+printc "$CYAN" "║      ∘──────────────────────────────────∘       ║"
 printc "$CYAN" "╚═════════════════════════════════════════════════╝"
 printc "$CYAN" "                                                   "
 printc "$CYAN" "                                                   "
