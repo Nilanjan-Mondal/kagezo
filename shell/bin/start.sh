@@ -4,6 +4,8 @@
 
 [[ "$(uname -s)" != "Linux" ]] && echo "Invalid platform detected" && exit 1
 
+printc() { printf "%b%s%b\n" "$1" "$2" "$RESET"; }
+
 declare -A services=(
   ["tracker"]="track"
   ["worker"]="worker"
@@ -27,7 +29,14 @@ if [[ "$1" == "all" ]]; then
 elif [[ -n "${services[$1]}" ]]; then
   start_service "$1"
 else
-  echo "Usage: start [tracker|worker|server|all]"
+  printc ""
+  printc ""
+  printc "$GREEN" "  USAGE:  "
+  printc "$GREEN" "  ◉  Start Daemons                               "
+  printc "$YELLOW" "     └─○ start [tracker|worker|server|all]  "
+  printc "$YELLOW" "         → Start specific/all daemons              "
+  printc ""
+  printc ""
   exit 0
 fi
 
