@@ -2,6 +2,10 @@
 # Utility function for kagezoShell (Linux only)
 # Future support for macOS will be added.
 
+GREEN="\033[32m"
+YELLOW="\033[33m"
+RESET="\033[0m"
+
 [[ "$(uname -s)" != "Linux" ]] && echo "Invalid platform detected" && exit 1
 
 printc() { printf "%b%s%b\n" "$1" "$2" "$RESET"; }
@@ -31,13 +35,13 @@ elif [[ -n "${services[$1]}" ]]; then
 else
   printc ""
   printc ""
-  printc "$GREEN" "  USAGE:  "
-  printc "$GREEN" "  ◉  Start Daemons                               "
-  printc "$YELLOW" "     └─○ start [tracker|worker|server|all]  "
-  printc "$YELLOW" "         → Start specific/all daemons              "
+  printc "$GREEN" "     USAGE:  "
+  printc "$GREEN" "     ◉  Start Daemons                               "
+  printc "$YELLOW" "        └─○ start [tracker|worker|server|all]  "
+  printc "$YELLOW" "            → Start specific/all daemons              "
   printc ""
   printc ""
   exit 0
 fi
 
-./bin/list.sh
+./bin/list.sh daemon
