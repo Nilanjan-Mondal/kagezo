@@ -95,6 +95,22 @@ tracker)
     ;;
   esac
   ;;
+ignore)
+  case "$ACTION" in
+  include)
+    grep -iqxF "$VALUE" "$IGNORE_FILE" || echo "$VALUE" >>"$IGNORE_FILE"
+    printc "$GREEN" "✔ Ignore list updated: Included '$VALUE'"
+    ;;
+  exclude)
+    sed -i "\|^$VALUE$|d" "$IGNORE_FILE"
+    printc "$GREEN" "✔ Ignore list updated: Excluded '$VALUE'"
+    ;;
+  *) printc "$RED" "✘ Error: Invalid ignore action." && exit 1 ;;
+  esac
+  ;;
 
+*)
+  printc "$RED" "✘ Error: Invalid command." && exit 1
+  ;;
 esac
 echo "[✔] Update successful!"
