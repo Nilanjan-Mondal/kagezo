@@ -30,16 +30,4 @@ COMMAND=$1 ACTION=$2 VALUE=$3
 # Elevate privileges
 [ "$EUID" -ne 0 ] && exec sudo "$0" "$@"
 
-case "$1" in
-track | ignore)
-  [[ -z $3 ]] && usage
-  update_list "${!1^^}LIST" "$2" "$3"
-  ;;
-cloudinary)
-  [[ $2 != "update" || -z $3 || -z $4 ]] && usage
-  update_cloudinary "$3" "$4"
-  ;;
-*) usage ;;
-esac
-
 echo "[✔] Update successful!"
