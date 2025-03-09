@@ -30,4 +30,16 @@ COMMAND=$1 ACTION=$2 VALUE=$3
 # Elevate privileges
 [ "$EUID" -ne 0 ] && exec sudo "$0" "$@"
 
+case "$COMMAND" in
+cloudinary)
+  case "$ACTION" in
+  name) VAR="CLOUDINARY_CLOUD_NAME" ;;
+  key) VAR="CLOUDINARY_API_KEY" ;;
+  secret) VAR="CLOUDINARY_API_SECRET" ;;
+  *) printc "$RED" "✘ Error: Invalid cloudinary action." && exit 1 ;;
+  esac
+  sed -i "s/^$VAR *= *['\"].*['\"]/$VAR = '$VALUE'/" "$ENV_FILE"
+  printc "$GREEN" "✔ $VAR updated successfully."
+  ;;
+esac
 echo "[✔] Update successful!"
