@@ -14,14 +14,16 @@ IGNORE_FILE="$USER_HOME/.local/share/kagezo/ignore.txt"
 ENV_FILE="/opt/kagezo/Server/.env"
 
 printc() { printf "%b%s%b\n" "$1" "$2" "$RESET"; }
-usage() {
-  echo "Usage: update [track|ignore|cloudinary] [add|remove|update] [value]"
-  echo "Examples:"
-  echo "  update.sh track add /path/to/directory"
-  echo "  update.sh ignore remove .jpeg"
-  echo "  update.sh cloudinary update API_KEY 123456"
-  exit 1
-}
+
+[ "$#" -lt 3 ] && echo "Usage: update [track|ignore|cloudinary] <value>"
+echo "Examples:"
+echo "  update tracker [include|exclude] <directory>"
+echo "  update ignore [include|exclude] <.extension>"
+echo "  update cloudinary update [name|key|secret] <value>"
+echo ""
+printc "$YELLOW" "[!] No need to give full path for tracker. It automatically searches your home directory"
+printc "$YELLOW" "[!] In case of multiple directories found, you can choose which one to include or exclude"
+exit 1 && exit 1
 
 update_list() {
   local file=$1 action=$2 value=$3
