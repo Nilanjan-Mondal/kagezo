@@ -1,10 +1,19 @@
 #!/bin/bash
-# Utility script for updating tracklist, ignore list, and Cloudinary credentials.
 
-TRACKLIST="tracklist.txt"
-IGNORELIST="ignore.txt"
-ENV_FILE=".env"
+# Color codes
+RESET="\e[0m"
+GREEN="\e[32m"
+RED="\e[31m"
+BLUE="\e[34m"
+YELLOW="\e[33m"
+BOLD="\e[1m"
 
+USER_HOME=$(eval echo ~$SUDO_USER)
+TRACKER_FILE="$USER_HOME/.local/share/kagezo/track.txt"
+IGNORE_FILE="$USER_HOME/.local/share/kagezo/ignore.txt"
+ENV_FILE="/opt/kagezo/Server/.env"
+
+printc() { printf "%b%s%b\n" "$1" "$2" "$RESET"; }
 usage() {
   echo "Usage: update [track|ignore|cloudinary] [add|remove|update] [value]"
   echo "Examples:"
