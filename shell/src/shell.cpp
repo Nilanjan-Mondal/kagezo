@@ -40,6 +40,21 @@ std::string Shell::readInput() {
   char c;
   setRawMode(true);
   size_t tempIndex = history.size();
+  size_t cursorPos = 0;
+
+  auto moveCursorLeft = [](size_t &pos) {
+    if (pos > 0) {
+      pos--;
+      std::cout << "\33[D"; // Move left
+    }
+  };
+
+  auto moveCursorRight = [](size_t &pos, size_t len) {
+    if (pos < len) {
+      pos++;
+      std::cout << "\33[C"; // Move right
+    }
+  };
 
   while (true) {
     c = getchar();
@@ -47,37 +62,76 @@ std::string Shell::readInput() {
     if (c == '\n') {
       std::cout << std::endl;
       break;
-    } else if (c == 127) {
-      if (!input.empty()) {
+    } else if (c == 127) { // Backspace
+      if (cursorPos > 0) {
+        input.erase(cursorPos - 1, 1);
+        cursorPos--;
         std::cout << "\b \b";
-        input.pop_back();
+        std::cout << "\33[s" << input.substr(cursorPos) << " \33[u"; // Redraw
       }
-    } else if (c == 27) {
+    } else if (c == 27) { // Arrow or special keys
       if (getchar() == '[') {
         char arrow = getchar();
-        if (arrow == 'A') {
+
+        if (arrow == 'A') { // Up arrow
           if (!history.empty() && tempIndex > 0) {
             tempIndex--;
             input = history[tempIndex];
+            cursorPos = input.length();
             clearLine();
             std::cout << input;
           }
-        } else if (arrow == 'B') {
+        } else if (arrow == 'B') { // Down arrow
           if (tempIndex < history.size() - 1) {
             tempIndex++;
             input = history[tempIndex];
-            clearLine();
-            std::cout << input;
           } else {
             tempIndex = history.size();
             input.clear();
-            clearLine();
+          }
+          cursorPos = input.length();
+          clearLine();
+          std::cout << input;
+        } else if (arrow == 'D') { // Left arrow
+          moveCursorLeft(cursorPos);
+        } else if (arrow == 'C') { // Right arrow
+          moveCursorRight(cursorPos, input.length());
+        } else if (arrow == '3' && getchar() == '~') { // Delete key
+          if (cursorPos < input.length()) {
+            input.erase(cursorPos, 1);
+            std::cout << "\33[s" << input.substr(cursorPos)
+                      << " \33[u"; // Redraw
+          }
+        } else if (arrow == '1' && getchar() == ';') { // Check for Ctrl
+          if (getchar() == '5') {
+            char ctrlArrow = getchar();
+            if (ctrlArrow == 'D') { // Ctrl + Left
+              if (cursorPos > 0) {
+                do {
+                  moveCursorLeft(cursorPos);
+                } while (cursorPos > 0 && input[cursorPos - 1] != ' ');
+                while (cursorPos > 0 && input[cursorPos - 1] == ' ') {
+                  moveCursorLeft(cursorPos); // Skip spaces
+                }
+              }
+            } else if (ctrlArrow == 'C') { // Ctrl + Right
+              if (cursorPos < input.length()) {
+                do {
+                  moveCursorRight(cursorPos, input.length());
+                } while (cursorPos < input.length() && input[cursorPos] != ' ');
+                while (cursorPos < input.length() && input[cursorPos] == ' ') {
+                  moveCursorRight(cursorPos, input.length()); // Skip spaces
+                }
+              }
+            }
           }
         }
       }
     } else {
-      std::cout << c;
-      input += c;
+      input.insert(cursorPos, 1, c);
+      cursorPos++;
+      std::cout << "\33[s" << input.substr(cursorPos - 1)
+                << "\33[u\33[C"; // Insert mode
     }
   }
 
