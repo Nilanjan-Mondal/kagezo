@@ -25,6 +25,11 @@ printc "$YELLOW" "[!] No need to give full path for tracker. It automatically se
 printc "$YELLOW" "[!] In case of multiple directories found, you can choose which one to include or exclude"
 exit 1 && exit 1
 
+COMMAND=$1 ACTION=$2 VALUE=$3
+
+# Elevate privileges
+[ "$EUID" -ne 0 ] && exec sudo "$0" "$@"
+
 update_list() {
   local file=$1 action=$2 value=$3
   [[ ! -f $file ]] && touch "$file"
