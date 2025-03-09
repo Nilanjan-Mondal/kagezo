@@ -41,5 +41,60 @@ cloudinary)
   sed -i "s/^$VAR *= *['\"].*['\"]/$VAR = '$VALUE'/" "$ENV_FILE"
   printc "$GREEN" "✔ $VAR updated successfully."
   ;;
+
+tracker)
+  case "$ACTION" in
+  include)
+    VALUE=$(basename "$VALUE")
+    MATCHES=($(find "$USER_HOME" -type d -name "$VALUE" 2>/dev/null | awk '{ print length, $0 }' | sort -n | cut -d' ' -f2-))
+    [ ${#MATCHES[@]} -eq 0 ] && printc "$RED" "✘ Error: No directories found for '$VALUE'." && exit 1
+    if [ ${#MATCHES[@]} -eq 1 ]; then
+      grep -iqxF "${MATCHES[0]}" "$TRACKER_FILE" || echo "${MATCHES[0]}" >>"$TRACKER_FILE"
+      printc "$GREEN" "✔ Tracker updated: Included '${MATCHES[0]}'"
+    else
+      printc "$BLUE" "🔍 Multiple matches for '$VALUE':"
+      for i in "${!MATCHES[@]}"; do printc "$YELLOW" "  ├─ ◉ $((i + 1)). ${MATCHES[$i]}"; done
+      printc "$YELLOW" "  ├─ ◉ $((i + 2)). Add all"
+      read -p "  └─ ➜ Choose: " choice
+      if [[ "$choice" =~ ^[0-9]+$ ]] && ((choice <= ${#MATCHES[@]})); then
+        grep -iqxF "${MATCHES[$((choice - 1))]}" "$TRACKER_FILE" || echo "${MATCHES[$((choice - 1))]}" >>"$TRACKER_FILE"
+        printc "$GREEN" "✔ Tracker updated: Included '${MATCHES[$((choice - 1))]}'"
+      elif [ "$choice" -eq $((${#MATCHES[@]} + 1)) ]; then
+        for dir in "${MATCHES[@]}"; do grep -iqxF "$dir" "$TRACKER_FILE" || echo "$dir" >>"$TRACKER_FILE"; done
+        printc "$GREEN" "✔ Tracker updated: All directories added."
+      else
+        printc "$RED" "✘ Invalid choice. No changes made." && exit 1
+      fi
+    fi
+    ;;
+
+  exclude)
+    MATCHES=($(grep "/$(basename "$VALUE")$" "$TRACKER_FILE"))
+    [ ${#MATCHES[@]} -eq 0 ] && printc "$RED" "✘ Error: No match for '$VALUE' in tracker." && exit 1
+    if [ ${#MATCHES[@]} -eq 1 ]; then
+      sed -i "\|^${MATCHES[0]}$|d" "$TRACKER_FILE"
+      printc "$GREEN" "✔ Tracker updated: Excluded '${MATCHES[0]}'"
+    else
+      printc "$BLUE" "Multiple matches for '$VALUE':"
+      for i in "${!MATCHES[@]}"; do printc "$YELLOW" "  ├─ ◉ $((i + 1)). ${MATCHES[$i]}"; done
+      printc "$YELLOW" "  ├─ ◉ $((i + 2)). Delete all"
+      read -p "  └─ ➜ Choose: " choice
+      if [[ "$choice" =~ ^[0-9]+$ ]] && ((choice <= ${#MATCHES[@]})); then
+        sed -i "\|^${MATCHES[$((choice - 1))]}$|d" "$TRACKER_FILE"
+        printc "$GREEN" "✔ Tracker updated: Excluded '${MATCHES[$((choice - 1))]}'"
+      elif [ "$choice" -eq $((${#MATCHES[@]} + 1)) ]; then
+        for dir in "${MATCHES[@]}"; do sed -i "\|^$dir$|d" "$TRACKER_FILE"; done
+        printc "$GREEN" "✔ Tracker updated: All removed."
+      else
+        printc "$RED" "✘ Invalid choice. No changes made." && exit 1
+      fi
+    fi
+    ;;
+  *)
+    printc "$RED" "✘ Error: Invalid tracker action." && exit 1
+    ;;
+  esac
+  ;;
+
 esac
 echo "[✔] Update successful!"
