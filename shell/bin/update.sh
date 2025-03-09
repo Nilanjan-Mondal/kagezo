@@ -30,24 +30,6 @@ COMMAND=$1 ACTION=$2 VALUE=$3
 # Elevate privileges
 [ "$EUID" -ne 0 ] && exec sudo "$0" "$@"
 
-update_list() {
-  local file=$1 action=$2 value=$3
-  [[ ! -f $file ]] && touch "$file"
-
-  case $action in
-  add) grep -qxF "$value" "$file" || echo "$value" >>"$file" ;;
-  remove) sed -i "\|^$value\$|d" "$file" ;;
-  *) usage ;;
-  esac
-}
-
-update_cloudinary() {
-  local key=$1 value=$2
-  [[ ! -f $ENV_FILE ]] && touch "$ENV_FILE"
-
-  grep -q "^$key=" "$ENV_FILE" && sed -i "s|^$key=.*|$key=$value|" "$ENV_FILE" || echo "$key=$value" >>"$ENV_FILE"
-}
-
 case "$1" in
 track | ignore)
   [[ -z $3 ]] && usage
